@@ -1,0 +1,71 @@
+obs space and action space are in a list
+is this building specific or for all buildings?
+
+looks like 3 buildings:
+	env._CityLearnEnv__buildings
+[<citylearn.building.LSTMDynamicsBuilding object at 0x7f85604ba190>, <citylearn.building.LSTMDynamicsBuilding object at 0x7f856047d3d0>, <citylearn.building.LSTMDynamicsBuilding object at 0x7f856044b210>]
+
+question
+so at test time wtf happens to the obs space and action space?
+will agent basically see the same thing
+why is shit in list and how do i handle it? I'm guessing just a simple wrapper
+how power outage is determined
+
+dir(env.central_agent)
+env.central_agent is tru so looks like is fine with one agent
+
+env.action_names
+[['dhw_storage', 'electrical_storage', 'cooling_device', 'dhw_storage', 'electrical_storage', 'cooling_device', 'dhw_storage', 'electrical_storage', 'cooling_device']]
+
+so action space is reapated
+but a bit different for last action. so electrical storage for one building is different
+
+oh maybe it's simple enoug that for public goes through 3 building and same for private. going to assume that that is the case
+
+
+possible further things to explore
+explore furtther some of the things below
+see what is available in the wrapper to explore
+
+
+looking at step, seems like stuff is in lists (except for done) but other than that it's fine
+	I don't get why obs is a list and not somethinge else
+
+obs space looks like some repeating things
+(Pdb) env.observation_names
+[['day_type', 'hour', 'outdoor_dry_bulb_temperature', 'outdoor_dry_bulb_temperature_predicted_6h', 'outdoor_dry_bulb_temperature_predicted_12h', 'outdoor_dry_bulb_temperature_predicted_24h', 'diffuse_solar_irradiance', 'diffuse_solar_irradiance_predicted_6h', 'diffuse_solar_irradiance_predicted_12h', 'diffuse_solar_irradiance_predicted_24h', 'direct_solar_irradiance', 'direct_solar_irradiance_predicted_6h', 'direct_solar_irradiance_predicted_12h', 'direct_solar_irradiance_predicted_24h', 'carbon_intensity', 'indoor_dry_bulb_temperature', 'non_shiftable_load', 'solar_generation', 'dhw_storage_soc', 'electrical_storage_soc', 'net_electricity_consumption', 'electricity_pricing', 'electricity_pricing_predicted_6h', 'electricity_pricing_predicted_12h', 'electricity_pricing_predicted_24h', 'cooling_demand', 'dhw_demand', 'occupant_count', 'indoor_dry_bulb_temperature_set_point', 'power_outage', 'indoor_dry_bulb_temperature', 'non_shiftable_load', 'solar_generation', 'dhw_storage_soc', 'electrical_storage_soc', 'net_electricity_consumption', 'cooling_demand', 'dhw_demand', 'occupant_count', 'indoor_dry_bulb_temperature_set_point', 'power_outage', 'indoor_dry_bulb_temperature', 'non_shiftable_load', 'solar_generation', 'dhw_storage_soc', 'electrical_storage_soc', 'net_electricity_consumption', 'cooling_demand', 'dhw_demand', 'occupant_count', 'indoor_dry_bulb_temperature_set_point', 'power_outage']]
+
+
+Pdb) dir(env)
+['DEFAULT_RANDOM_SEED_RANGE', 'DEFAULT_SECONDS_PER_TIME_STEP', '_CityLearnEnv__buildings', '_CityLearnEnv__central_agent', '_CityLearnEnv__episode_time_steps', '_CityLearnEnv__net_electricity_consumption', '_CityLearnEnv__net_electricity_consumption_cost', '_CityLearnEnv__net_electricity_consumption_emission', '_CityLearnEnv__random_episode_split', '_CityLearnEnv__reward_function', '_CityLearnEnv__rewards', '_CityLearnEnv__rolling_episode_split', '_CityLearnEnv__root_directory', '_CityLearnEnv__schema', '_CityLearnEnv__shared_observations', '_Environment__episode_tracker', '_Environment__random_seed', '_Environment__seconds_per_time_step', '_Environment__time_step', '_Environment__uid', '__annotations__', '__class__', '__class_getitem__', '__delattr__', '__dict__', '__dir__', '__doc__', '__enter__', '__eq__', '__exit__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__orig_bases__', '__parameters__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__slots__', '__str__', '__subclasshook__', '__weakref__', '_load', '_np_random', '_parse_actions', 'action_names', 'action_space', 'buildings', 'central_agent', 'close', 'cooling_demand', 'cooling_electricity_consumption', 'cooling_storage_electricity_consumption', 'dhw_demand', 'dhw_electricity_consumption', 'dhw_storage_electricity_consumption', 'done', 'electrical_storage_electricity_consumption', 'energy_from_cooling_device', 'energy_from_cooling_device_to_cooling_storage', 'energy_from_cooling_storage', 'energy_from_dhw_device', 'energy_from_dhw_device_to_dhw_storage', 'energy_from_dhw_storage', 'energy_from_electrical_storage', 'energy_from_heating_device', 'energy_from_heating_device_to_heating_storage', 'energy_from_heating_storage', 'energy_to_electrical_storage', 'energy_to_non_shiftable_load', 'episode', 'episode_time_steps', 'episode_tracker', 'evaluate', 'evaluate_citylearn_challenge', 'get_default_shared_observations', 'get_info', 'get_metadata', 'heating_demand', 'heating_electricity_consumption', 'heating_storage_electricity_consumption', 'load_agent', 'metadata', 'net_electricity_consumption', 'net_electricity_consumption_cost', 'net_electricity_consumption_cost_without_storage',
+ 'net_electricity_consumption_cost_without_storage_and_partial_load', 'net_electricity_consumption_cost_without_storage_and_partial_load_and_pv', 'net_electricity_consumption_cost_without_storage_and_pv', 'net_electricity_consumption_emission', 'net_electricity_consumption_emission_without_storage', 'net_electricity_consumption_emission_without_storage_and_partial_load', 'net_electricity_consumption_emission_without_storage_and_partial_load_and_pv', 'net_electricity_consumption_emission_without_storage_and_pv', 'net_electricity_consumption_without_storage', 'net_electricity_consumption_without_storage_and_partial_load', 'net_electricity_consumption_without_storage_and_partial_load_and_pv', 'net_electricity_consumption_without_storage_and_pv', 'next_time_step', 'non_shiftable_load', 'np_random', 'observation_names', 'observation_space', 'observations', 'power_outage', 'random_episode_split', 'random_seed', 'render', 'reset', 'reset_time_step', 'reward_function', 'reward_range', 'rewards', 'rolling_episode_split', 'root_directory', 'schema', 'seconds_per_time_step', 'seed', 'shared_observations', 'solar_generation', 'spec', 'step', 'time_step', 'time_steps', 'uid', 'unwrapped', 'update_variables']
+
+
+ug actions passed in as a list so have to modify that as well for env
+(Pdb) actions
+[[0.091, 0.091, 0.4, 0.091, 0.091, 0.4, 0.091, 0.091, 0.4]]
+
+
+only things available in wrapper
+
+class WrapperEnv:
+    """
+    Env to wrap provide Citylearn Env data without providing full env
+    Preventing attribute access outside of the available functions
+    """
+    def __init__(self, env_data):
+        self.observation_names = env_data['observation_names']
+        self.action_names = env_data['action_names']
+        self.observation_space = env_data['observation_space']
+        self.action_space = env_data['action_space']
+        self.time_steps = env_data['time_steps']
+        self.seconds_per_time_step = env_data['seconds_per_time_step']
+        self.random_seed = env_data['random_seed']
+        self.buildings_metadata = env_data['buildings_metadata']
+        self.episode_tracker = env_data['episode_tracker']
+
+
+most of these are up above or no big deal
+	env.get_metadata()['buildings']
+	this has a ton of info and might be able to produce features for private dataset
+
